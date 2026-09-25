@@ -1,0 +1,71 @@
+{
+  "pullRequest": {
+    "owner": "anthropics",
+    "repo": "anthropic-sdk-typescript",
+    "number": 1205
+  },
+  "fileReviews": [
+    {
+      "file": "BetaToolRunner.ts",
+      "codeQuality": {
+        "file": "BetaToolRunner.ts",
+        "issues": [],
+        "overallScore": 0,
+        "summary": "Unable to analyze code: File 'BetaToolRunner.ts' does not exist in the current working directory (/voc/work/cd14715-claude-code-classroom/project/starter). Please provide the correct file path or verify the file exists."
+      },
+      "testCoverage": {
+        "file": "BetaToolRunner.ts",
+        "hasTests": false,
+        "testFiles": [],
+        "untestedPaths": [],
+        "coverageEstimate": 0,
+        "summary": "The file BetaToolRunner.ts does not exist in the current codebase. Unable to perform test coverage analysis. The file may need to be created, or the file path may be incorrect."
+      },
+      "refactorings": {
+        "file": "BetaToolRunner.ts",
+        "suggestions": [],
+        "summary": "Unable to analyze BetaToolRunner.ts as the file does not exist in the current codebase. Please provide the correct file path or file content to proceed with refactoring analysis."
+      }
+    },
+    {
+      "file": "BetaToolRunner.test.ts",
+      "codeQuality": {
+        "file": "BetaToolRunner.test.ts",
+        "issues": [],
+        "overallScore": 0,
+        "summary": "Unable to analyze code quality: The file 'BetaToolRunner.test.ts' does not exist in the current project directory or any subdirectories. Please verify the file path and ensure the file exists before requesting analysis."
+      },
+      "testCoverage": {
+        "file": "BetaToolRunner.test.ts",
+        "hasTests": false,
+        "testFiles": [],
+        "untestedPaths": [],
+        "coverageEstimate": 0,
+        "summary": "The file BetaToolRunner.test.ts does not exist in the project. No source file named BetaToolRunner.ts was found either. This appears to be either a non-existent file or a typo in the filename."
+      },
+      "refactorings": {
+        "file": "BetaToolRunner.test.ts",
+        "suggestions": [],
+        "summary": "Unable to analyze the file BetaToolRunner.test.ts as it does not exist in the current working directory. No refactoring suggestions can be provided without access to the actual code."
+      }
+    }
+  ],
+  "summary": {
+    "totalFiles": 2,
+    "overallScore": 0,
+    "criticalIssues": 0,
+    "highPriorityTests": 0,
+    "refactoringOpportunities": 0
+  },
+  "recommendations": [],
+  "metadata": {
+    "analyzedAt": "2026-09-25T10:20:47.564Z",
+    "duration": 438081,
+    "agentVersions": {
+      "orchestrator": "1.0.0",
+      "codeQuality": "1.0.0",
+      "testCoverage": "1.0.0",
+      "refactoring": "1.0.0"
+    }
+  }
+}

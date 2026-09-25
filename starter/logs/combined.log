@@ -1,0 +1,27 @@
+{"level":"info","message":"Starting code review","owner":"facebook","prNumber":12345,"repo":"react","service":"code-review-system","timestamp":"2026-09-25 10:00:36"}
+{"level":"info","message":"Starting code review","owner":"facebook","prNumber":12345,"repo":"react","service":"code-review-system","timestamp":"2026-09-25 10:00:36"}
+{"level":"info","message":"Fetching PR files","service":"code-review-system","timestamp":"2026-09-25 10:00:36"}
+{"level":"warn","message":"No code files found in PR","service":"code-review-system","timestamp":"2026-09-25 10:01:05"}
+{"level":"info","message":"Starting code review","owner":"anthropics","prNumber":1205,"repo":"anthropic-sdk-typescript","service":"code-review-system","timestamp":"2026-09-25 10:06:04"}
+{"level":"info","message":"Starting code review","owner":"anthropics","prNumber":1205,"repo":"anthropic-sdk-typescript","service":"code-review-system","timestamp":"2026-09-25 10:06:04"}
+{"level":"info","message":"Fetching PR files","service":"code-review-system","timestamp":"2026-09-25 10:06:04"}
+{"files":["src/lib/tools/BetaToolRunner.ts","tests/lib/tools/BetaToolRunner.test.ts"],"level":"info","message":"Found 2 files to analyze","service":"code-review-system","timestamp":"2026-09-25 10:12:16"}
+{"level":"info","message":"Analyzing file: src/lib/tools/BetaToolRunner.ts","service":"code-review-system","timestamp":"2026-09-25 10:12:16"}
+{"level":"info","message":"Analyzing file: tests/lib/tools/BetaToolRunner.test.ts","service":"code-review-system","timestamp":"2026-09-25 10:12:16"}
+{"error":{"code":"RETRY_EXHAUSTED","metadata":{"maxRetries":3,"originalError":"ANTHROPIC_MODEL environment variable is required"},"name":"ReviewError"},"level":"error","message":"Failed to analyze file: tests/lib/tools/BetaToolRunner.test.ts","service":"code-review-system","timestamp":"2026-09-25 10:12:19"}
+{"error":{"code":"RETRY_EXHAUSTED","metadata":{"maxRetries":3,"originalError":"ANTHROPIC_MODEL environment variable is required"},"name":"ReviewError"},"level":"error","message":"Failed to analyze file: src/lib/tools/BetaToolRunner.ts","service":"code-review-system","timestamp":"2026-09-25 10:12:19"}
+{"level":"info","message":"Starting code review","owner":"anthropics","prNumber":1205,"repo":"anthropic-sdk-typescript","service":"code-review-system","timestamp":"2026-09-25 10:13:29"}
+{"level":"info","message":"Starting code review","owner":"anthropics","prNumber":1205,"repo":"anthropic-sdk-typescript","service":"code-review-system","timestamp":"2026-09-25 10:13:29"}
+{"level":"info","message":"Fetching PR files","service":"code-review-system","timestamp":"2026-09-25 10:13:29"}
+{"files":["BetaToolRunner.ts","BetaToolRunner.test.ts"],"level":"info","message":"Found 2 files to analyze","service":"code-review-system","timestamp":"2026-09-25 10:17:59"}
+{"level":"info","message":"Analyzing file: BetaToolRunner.ts","service":"code-review-system","timestamp":"2026-09-25 10:17:59"}
+{"level":"info","message":"Analyzing file: BetaToolRunner.test.ts","service":"code-review-system","timestamp":"2026-09-25 10:17:59"}
+{"duration":438081,"level":"info","message":"Code review completed","overallScore":0,"owner":"anthropics","prNumber":1205,"repo":"anthropic-sdk-typescript","service":"code-review-system","timestamp":"2026-09-25 10:20:47","totalFiles":2}
+{"level":"info","message":"Starting code review","owner":"anthropics","prNumber":1205,"repo":"anthropic-sdk-typescript","service":"code-review-system","timestamp":"2026-09-25 10:23:38"}
+{"level":"info","message":"Starting code review","owner":"anthropics","prNumber":1205,"repo":"anthropic-sdk-typescript","service":"code-review-system","timestamp":"2026-09-25 10:23:38"}
+{"level":"info","message":"Fetching PR files","service":"code-review-system","timestamp":"2026-09-25 10:23:38"}
+{"level":"warn","message":"No code files found in PR","service":"code-review-system","timestamp":"2026-09-25 10:31:03"}
+{"level":"info","message":"Starting code review","owner":"facebook","prNumber":12345,"repo":"react","service":"code-review-system","timestamp":"2026-09-25 10:54:18"}
+{"level":"info","message":"Starting code review","owner":"facebook","prNumber":12345,"repo":"react","service":"code-review-system","timestamp":"2026-09-25 10:54:18"}
+{"level":"info","message":"Fetching PR files","service":"code-review-system","timestamp":"2026-09-25 10:54:18"}
+{"level":"warn","message":"No code files found in PR","service":"code-review-system","timestamp":"2026-09-25 10:54:35"}

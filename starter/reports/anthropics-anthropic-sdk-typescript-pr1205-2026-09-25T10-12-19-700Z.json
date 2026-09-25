@@ -1,0 +1,71 @@
+{
+  "pullRequest": {
+    "owner": "anthropics",
+    "repo": "anthropic-sdk-typescript",
+    "number": 1205
+  },
+  "fileReviews": [
+    {
+      "file": "src/lib/tools/BetaToolRunner.ts",
+      "codeQuality": {
+        "file": "src/lib/tools/BetaToolRunner.ts",
+        "issues": [],
+        "overallScore": 0,
+        "summary": "Analysis failed: Failed after 3 retries: ANTHROPIC_MODEL environment variable is required"
+      },
+      "testCoverage": {
+        "file": "src/lib/tools/BetaToolRunner.ts",
+        "hasTests": false,
+        "testFiles": [],
+        "untestedPaths": [],
+        "coverageEstimate": 0,
+        "summary": "Analysis failed: Failed after 3 retries: ANTHROPIC_MODEL environment variable is required"
+      },
+      "refactorings": {
+        "file": "src/lib/tools/BetaToolRunner.ts",
+        "suggestions": [],
+        "summary": "Analysis failed: Failed after 3 retries: ANTHROPIC_MODEL environment variable is required"
+      }
+    },
+    {
+      "file": "tests/lib/tools/BetaToolRunner.test.ts",
+      "codeQuality": {
+        "file": "tests/lib/tools/BetaToolRunner.test.ts",
+        "issues": [],
+        "overallScore": 0,
+        "summary": "Analysis failed: Failed after 3 retries: ANTHROPIC_MODEL environment variable is required"
+      },
+      "testCoverage": {
+        "file": "tests/lib/tools/BetaToolRunner.test.ts",
+        "hasTests": false,
+        "testFiles": [],
+        "untestedPaths": [],
+        "coverageEstimate": 0,
+        "summary": "Analysis failed: Failed after 3 retries: ANTHROPIC_MODEL environment variable is required"
+      },
+      "refactorings": {
+        "file": "tests/lib/tools/BetaToolRunner.test.ts",
+        "suggestions": [],
+        "summary": "Analysis failed: Failed after 3 retries: ANTHROPIC_MODEL environment variable is required"
+      }
+    }
+  ],
+  "summary": {
+    "totalFiles": 2,
+    "overallScore": 0,
+    "criticalIssues": 0,
+    "highPriorityTests": 0,
+    "refactoringOpportunities": 0
+  },
+  "recommendations": [],
+  "metadata": {
+    "analyzedAt": "2026-09-25T10:12:19.700Z",
+    "duration": 375007,
+    "agentVersions": {
+      "orchestrator": "1.0.0",
+      "codeQuality": "1.0.0",
+      "testCoverage": "1.0.0",
+      "refactoring": "1.0.0"
+    }
+  }
+}

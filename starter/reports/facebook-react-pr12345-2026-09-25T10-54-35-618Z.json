@@ -1,0 +1,26 @@
+{
+  "pullRequest": {
+    "owner": "facebook",
+    "repo": "react",
+    "number": 12345
+  },
+  "fileReviews": [],
+  "summary": {
+    "totalFiles": 0,
+    "overallScore": 100,
+    "criticalIssues": 0,
+    "highPriorityTests": 0,
+    "refactoringOpportunities": 0
+  },
+  "recommendations": [],
+  "metadata": {
+    "analyzedAt": "2026-09-25T10:54:35.618Z",
+    "duration": 16976,
+    "agentVersions": {
+      "orchestrator": "1.0.0",
+      "codeQuality": "1.0.0",
+      "testCoverage": "1.0.0",
+      "refactoring": "1.0.0"
+    }
+  }
+}

@@ -53,6 +53,9 @@ export declare class RateLimiter {
         tokensInWindow: number;
         availableRequests: number;
         availableTokens: number;
+        maxConcurrent: number;
+        maxRequestsPerMinute: number;
+        maxTokensPerMinute: number;
     };
     /**
      * Check if request can proceed immediately

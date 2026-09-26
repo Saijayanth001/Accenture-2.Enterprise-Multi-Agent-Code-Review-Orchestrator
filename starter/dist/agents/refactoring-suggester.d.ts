@@ -1,4 +1,9 @@
+import { type AgentDefinition } from '@anthropic-ai/claude-agent-sdk';
 import { RefactoringSuggestion } from '../types/analysis-results';
+/**
+ * Subagent definition for Refactoring Suggester
+ */
+export declare const refactoringSuggesterAgent: AgentDefinition;
 /**
  * Suggest refactorings for a file
  */

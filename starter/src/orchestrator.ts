@@ -1,12 +1,12 @@
 import { query } from '@anthropic-ai/claude-agent-sdk';
-import { ReviewReport } from './types/report-types';
-import { CodeQualityResult, TestCoverageResult, RefactoringSuggestion } from './types/analysis-results';
-import { mcpServersConfig } from './config/mcp.config';
-import { buildOrchestratorPrompt } from './prompts';
-import { analyzeCodeQuality, analyzeTestCoverage, suggestRefactorings } from './agents';
-import { RateLimiter, DEFAULT_RATE_LIMITS, RateLimiterConfig } from './utils/rate-limiter';
-import { withRetry, withTimeout, ErrorCodes, ReviewError } from './utils/error-handler';
-import { logger } from './utils/logger';
+import { ReviewReport } from './types/report-types.js';
+import { CodeQualityResult, TestCoverageResult, RefactoringSuggestion } from './types/analysis-results.js';
+import { mcpServersConfig } from './config/mcp.config.js';
+import { buildOrchestratorPrompt } from './prompts/index.js';
+import { agentDefinitions, analyzeCodeQuality, analyzeTestCoverage, suggestRefactorings } from './agents/index.js';
+import { RateLimiter, DEFAULT_RATE_LIMITS, RateLimiterConfig } from './utils/rate-limiter.js';
+import { withRetry, withTimeout, ErrorCodes, ReviewError } from './utils/error-handler.js';
+import { logger } from './utils/logger.js';
 
 /**
  * Orchestrator configuration options
@@ -70,10 +70,11 @@ export class CodeReviewOrchestrator {
           prompt,
           options: {
             model,
+            agents: agentDefinitions,
+            allowedTools: ['Task', 'Read', 'Skill', 'Grep', 'Glob', 'mcp__github__*'],
             mcpServers: {
               github: mcpServersConfig.github
-            },
-            allowedTools: ['mcp__github__*']
+            }
           }
         })) {
           if (message.type === 'result' && message.subtype === 'success') {
@@ -82,9 +83,30 @@ export class CodeReviewOrchestrator {
           }
         }
       } catch (error) {
-        logger.error('Failed to fetch PR files', { error });
-        // Fall back to mock data for testing
-        files = [];
+        logger.error('Failed to fetch PR files via MCP', { error });
+      }
+
+      // Fallback: If query returned no files or failed, fetch files via GitHub REST API
+      if (files.length === 0) {
+        logger.info('Attempting REST API fallback to fetch PR files');
+        try {
+          const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}/files`, {
+            headers: {
+              'User-Agent': 'CodeReviewOrchestrator',
+              ...(process.env.GITHUB_TOKEN ? { Authorization: `token ${process.env.GITHUB_TOKEN}` } : {})
+            }
+          });
+          if (res.ok) {
+            const data: any = await res.json();
+            if (Array.isArray(data)) {
+              files = data
+                .map((f: any) => f.filename)
+                .filter((f: string) => /\.(ts|tsx|js|jsx|py|json)$/i.test(f));
+            }
+          }
+        } catch (fallbackError) {
+          logger.error('REST API fallback failed', { error: fallbackError });
+        }
       }
 
       if (files.length === 0) {
@@ -141,7 +163,7 @@ export class CodeReviewOrchestrator {
   /**
    * Analyze a single file with all three subagents in parallel
    */
-  private async analyzeFile(file: string, owner?: string, repo?: string): Promise<{
+  async analyzeFile(file: string, owner?: string, repo?: string): Promise<{
     file: string;
     codeQuality: CodeQualityResult;
     testCoverage: TestCoverageResult;
@@ -210,28 +232,62 @@ export class CodeReviewOrchestrator {
   }
 
   /**
-   * Extract file list from agent response
-   * This is a simple implementation - could be enhanced with structured output
+   * Extract file list from agent response or string content
    */
-  private extractFileList(response: unknown): string[] {
-    // For now, return empty array - in real implementation, parse from agent response
-    // The agent should be configured to return structured file list
-    const responseStr = typeof response === 'string' ? response : JSON.stringify(response);
+  extractFileList(response: unknown): string[] {
+    if (!response) return [];
 
-    // Simple regex to extract file paths
-    const filePattern = /(?:^|\s)([a-zA-Z0-9_\-./]+\.(?:ts|tsx|js|jsx|py))(?:\s|$)/g;
-    const matches = [...responseStr.matchAll(filePattern)];
+    const text = typeof response === 'string' ? response : JSON.stringify(response);
 
-    return matches
-      .map(m => m[1])
-      .filter((file): file is string => file !== undefined)
-      .filter((file, index, self) => self.indexOf(file) === index);
+    // Try parsing as JSON if possible
+    try {
+      const parsed = typeof response === 'string' ? JSON.parse(response) : response;
+      if (Array.isArray(parsed)) {
+        return parsed
+          .map(f => (typeof f === 'string' ? f : f?.filename || f?.path || String(f)))
+          .map(f => f.trim().replace(/^[`"']|[`"']$/g, ''))
+          .filter(f => f.length > 0 && /\.(ts|tsx|js|jsx|py|json|md|css|html|rs|go|java|cpp|c|h|cs)$/i.test(f));
+      }
+      if (typeof parsed === 'object' && parsed !== null && Array.isArray((parsed as any).files)) {
+        return (parsed as any).files
+          .map((f: any) => (typeof f === 'string' ? f : f?.filename || f?.path || String(f)))
+          .map((f: string) => f.trim().replace(/^[`"']|[`"']$/g, ''))
+          .filter((f: string) => f.length > 0 && /\.(ts|tsx|js|jsx|py|json|md|css|html|rs|go|java|cpp|c|h|cs)$/i.test(f));
+      }
+    } catch {
+      // Ignore JSON parse error, fall through to regex line-by-line parsing
+    }
+
+    const lines = text.split(/\r?\n/);
+    const files: string[] = [];
+    const codeFilePattern = /(?:[a-zA-Z0-9_\-./\\]+\.(?:ts|tsx|js|jsx|py|json|md|css|html|rs|go|java|cpp|c|h|cs))/gi;
+
+    for (const line of lines) {
+      // Strip leading bullet markers, numbered lists, backticks, and quotes without stripping internal hyphens
+      const cleaned = line
+        .replace(/^\s*[-*+]\s+/, '')
+        .replace(/^\s*\d+\.\s+/, '')
+        .replace(/[`"']/g, '')
+        .trim();
+
+      const matches = cleaned.match(codeFilePattern);
+      if (matches) {
+        for (const match of matches) {
+          const trimmed = match.replace(/^[./\\]+/, '').trim();
+          if (trimmed.includes('.') && !trimmed.startsWith('http')) {
+            files.push(trimmed);
+          }
+        }
+      }
+    }
+
+    return Array.from(new Set(files));
   }
 
   /**
    * Calculate summary statistics from all file reviews
    */
-  private calculateSummary(fileReviews: Array<{
+  calculateSummary(fileReviews: Array<{
     file: string;
     codeQuality: CodeQualityResult;
     testCoverage: TestCoverageResult;
@@ -268,7 +324,7 @@ export class CodeReviewOrchestrator {
   /**
    * Generate top recommendations from all file reviews
    */
-  private generateRecommendations(fileReviews: Array<{
+  generateRecommendations(fileReviews: Array<{
     file: string;
     codeQuality: CodeQualityResult;
     testCoverage: TestCoverageResult;

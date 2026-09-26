@@ -1,4 +1,4 @@
-import { query } from '@anthropic-ai/claude-agent-sdk';
+import { query, type AgentDefinition } from '@anthropic-ai/claude-agent-sdk';
 import { TEST_COVERAGE_ANALYZER_PROMPT } from '../prompts';
 import {
   TestCoverageResultJSONSchema,
@@ -6,6 +6,16 @@ import {
   TestCoverageResultSchema
 } from '../types/analysis-results';
 import { mcpServersConfig } from '../config/mcp.config';
+
+/**
+ * Subagent definition for Test Coverage Analyzer
+ */
+export const testCoverageAnalyzerAgent: AgentDefinition = {
+  description: 'Specialized subagent for evaluating test coverage completeness, untested branches, and edge cases.',
+  prompt: TEST_COVERAGE_ANALYZER_PROMPT,
+  tools: ['Read', 'Skill', 'Grep', 'Glob', 'mcp__github__*'],
+  model: 'inherit'
+};
 
 /**
  * Analyze a file for test coverage gaps
@@ -24,7 +34,7 @@ export async function analyzeTestCoverage(
 
 File to analyze: ${filePath}
 
-NOTE: If this is a GitHub PR file (indicated by "GitHub PR file from owner/repo: path"), use the GitHub MCP tools (mcp__github__*) to fetch the file content.`;
+NOTE: If this is a GitHub PR file (indicated by "GitHub PR file from owner/repo: path"), use the GitHub MCP tools (mcp__github__*) or Read tool to fetch the file content.`;
 
   for await (const message of query({
     prompt,
@@ -32,11 +42,13 @@ NOTE: If this is a GitHub PR file (indicated by "GitHub PR file from owner/repo:
       model,
       cwd: PROJECT_ROOT,
       settingSources: ['project'],
+      agents: {
+        'test-coverage-analyzer': testCoverageAnalyzerAgent
+      },
       mcpServers: {
         github: mcpServersConfig.github
       },
-      allowedTools: ['Read', 'Grep', 'Glob', 'mcp__github__*'],
-      // Note: Extended thinking is handled by the model automatically for complex analysis
+      allowedTools: ['Task', 'Read', 'Skill', 'Grep', 'Glob', 'mcp__github__*'],
       outputFormat: {
         type: 'json_schema',
         schema: TestCoverageResultJSONSchema

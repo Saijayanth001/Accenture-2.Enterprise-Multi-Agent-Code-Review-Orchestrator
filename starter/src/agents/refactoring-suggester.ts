@@ -1,4 +1,4 @@
-import { query } from '@anthropic-ai/claude-agent-sdk';
+import { query, type AgentDefinition } from '@anthropic-ai/claude-agent-sdk';
 import { REFACTORING_SUGGESTER_PROMPT } from '../prompts';
 import {
   RefactoringSuggestionJSONSchema,
@@ -6,6 +6,16 @@ import {
   RefactoringSuggestionSchema
 } from '../types/analysis-results';
 import { mcpServersConfig } from '../config/mcp.config';
+
+/**
+ * Subagent definition for Refactoring Suggester
+ */
+export const refactoringSuggesterAgent: AgentDefinition = {
+  description: 'Specialized subagent for recommending architectural improvements, pattern applications, and refactoring opportunities.',
+  prompt: REFACTORING_SUGGESTER_PROMPT,
+  tools: ['Read', 'Skill', 'Grep', 'Glob', 'mcp__github__*'],
+  model: 'inherit'
+};
 
 /**
  * Suggest refactorings for a file
@@ -24,7 +34,7 @@ export async function suggestRefactorings(
 
 File to analyze: ${filePath}
 
-NOTE: If this is a GitHub PR file (indicated by "GitHub PR file from owner/repo: path"), use the GitHub MCP tools (mcp__github__*) to fetch the file content.`;
+NOTE: If this is a GitHub PR file (indicated by "GitHub PR file from owner/repo: path"), use the GitHub MCP tools (mcp__github__*) or Read tool to fetch the file content.`;
 
   for await (const message of query({
     prompt,
@@ -32,10 +42,13 @@ NOTE: If this is a GitHub PR file (indicated by "GitHub PR file from owner/repo:
       model,
       cwd: PROJECT_ROOT,
       settingSources: ['project'],
+      agents: {
+        'refactoring-suggester': refactoringSuggesterAgent
+      },
       mcpServers: {
         github: mcpServersConfig.github
       },
-      allowedTools: ['Read', 'mcp__github__*'],
+      allowedTools: ['Task', 'Read', 'Skill', 'Grep', 'Glob', 'mcp__github__*'],
       outputFormat: {
         type: 'json_schema',
         schema: RefactoringSuggestionJSONSchema

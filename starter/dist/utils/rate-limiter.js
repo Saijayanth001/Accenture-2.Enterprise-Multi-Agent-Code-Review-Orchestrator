@@ -80,7 +80,10 @@ export class RateLimiter {
             requestsInWindow,
             tokensInWindow,
             availableRequests: Math.max(0, this.config.maxRequestsPerMinute - requestsInWindow),
-            availableTokens: Math.max(0, this.config.maxTokensPerMinute - tokensInWindow)
+            availableTokens: Math.max(0, this.config.maxTokensPerMinute - tokensInWindow),
+            maxConcurrent: this.config.maxConcurrent,
+            maxRequestsPerMinute: this.config.maxRequestsPerMinute,
+            maxTokensPerMinute: this.config.maxTokensPerMinute
         };
     }
     /**

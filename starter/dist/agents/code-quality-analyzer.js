@@ -3,6 +3,15 @@ import { CODE_QUALITY_ANALYZER_PROMPT } from '../prompts';
 import { CodeQualityResultJSONSchema, CodeQualityResultSchema } from '../types/analysis-results';
 import { mcpServersConfig } from '../config/mcp.config';
 /**
+ * Subagent definition for Code Quality Analyzer
+ */
+export const codeQualityAnalyzerAgent = {
+    description: 'Specialized subagent for analyzing code quality, anti-patterns, security, maintainability, and best practices.',
+    prompt: CODE_QUALITY_ANALYZER_PROMPT,
+    tools: ['Read', 'Skill', 'Grep', 'Glob', 'mcp__github__*'],
+    model: 'inherit'
+};
+/**
  * Analyze a file for code quality issues
  */
 export async function analyzeCodeQuality(filePath) {
@@ -15,17 +24,20 @@ export async function analyzeCodeQuality(filePath) {
 
 File to analyze: ${filePath}
 
-NOTE: If this is a GitHub PR file (indicated by "GitHub PR file from owner/repo: path"), use the GitHub MCP tools (mcp__github__*) to fetch the file content.`;
+NOTE: If this is a GitHub PR file (indicated by "GitHub PR file from owner/repo: path"), use the GitHub MCP tools (mcp__github__*) or Read tool to fetch the file content.`;
     for await (const message of query({
         prompt,
         options: {
             model,
             cwd: PROJECT_ROOT,
             settingSources: ['project'],
+            agents: {
+                'code-quality-analyzer': codeQualityAnalyzerAgent
+            },
             mcpServers: {
                 github: mcpServersConfig.github
             },
-            allowedTools: ['Read', 'Skill', 'Grep', 'Glob', 'mcp__github__*'],
+            allowedTools: ['Task', 'Read', 'Skill', 'Grep', 'Glob', 'mcp__github__*'],
             outputFormat: {
                 type: 'json_schema',
                 schema: CodeQualityResultJSONSchema

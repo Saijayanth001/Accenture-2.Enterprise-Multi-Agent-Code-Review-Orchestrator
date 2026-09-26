@@ -1,9 +1,9 @@
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 import * as path from 'path';
-import { CodeReviewOrchestrator } from './orchestrator';
-import { ReportGenerator } from './utils/report-generator';
-import { logger } from './utils/logger';
+import { CodeReviewOrchestrator } from './orchestrator.js';
+import { ReportGenerator } from './utils/report-generator.js';
+import { logger } from './utils/logger.js';
 
 // Load environment variables
 dotenv.config();

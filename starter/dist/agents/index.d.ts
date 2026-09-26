@@ -1,7 +1,13 @@
+import type { AgentDefinition } from '@anthropic-ai/claude-agent-sdk';
+export { codeQualityAnalyzerAgent, analyzeCodeQuality } from './code-quality-analyzer';
+export { testCoverageAnalyzerAgent, analyzeTestCoverage } from './test-coverage-analyzer';
+export { refactoringSuggesterAgent, suggestRefactorings } from './refactoring-suggester';
 /**
- * Subagent exports
+ * Registry of subagents for the orchestrator query() configuration
  */
-export { analyzeCodeQuality } from './code-quality-analyzer';
-export { analyzeTestCoverage } from './test-coverage-analyzer';
-export { suggestRefactorings } from './refactoring-suggester';
+export declare const agentDefinitions: Record<string, AgentDefinition>;
+/**
+ * Export AgentDefinitions for compatibility with requirement specifications
+ */
+export declare const AgentDefinitions: Record<string, AgentDefinition>;
 //# sourceMappingURL=index.d.ts.map
